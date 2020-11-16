@@ -1,5 +1,8 @@
 # ATMDjango
 
+workon yourEnvName
+python manage.py runserver
+
 Login with  
 username: admin   
 pw: group1  
