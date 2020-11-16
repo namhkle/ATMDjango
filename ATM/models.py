@@ -27,6 +27,7 @@ class Card(models.Model):
     balance = models.PositiveIntegerField() 
     address = models.CharField(max_length=60)  
     phone_number = models.PositiveIntegerField()
+    #card_status = models.CharField(max_length=30, default='Active')
 
     def __str__(self):
         return self.card_name
