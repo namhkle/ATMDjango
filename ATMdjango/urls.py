@@ -24,8 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls), 
     path('', views.index),
     #path('ATM/', index) for different pages
-    path('login/', auth_views.LoginView.as_view(template_name='ATM/login.html'), name='login'), 
-    path('logout/', auth_views.LogoutView.as_view(template_name='ATM/logout.html'), name='logout'), 
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'), 
+    path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'), 
     path('account-panel/', views.account_panel), 
     path('add-card/', views.add_card), 
     path('atm-status/', views.atm_status), 

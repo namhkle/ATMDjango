@@ -1,6 +1,4 @@
 from django.shortcuts import render, redirect
-#from django.http import HttpResponse
-#from django.http import HttpResponseRedirect
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
@@ -41,7 +39,7 @@ def log_in(request):
         else:
             messages.error(request, 'Username OR Password is incorrect')
 
-    return render(request, 'login.html')
+    return render(request,'login.html')
 
 def log_out(request):
 	logout(request)
@@ -50,13 +48,25 @@ def log_out(request):
 @login_required(login_url='/login')
 def account_panel(request):
     card = Card.objects.all()
+    pin = request.POST.get('Pin')
+    card_number = request.POST.get('Card Number')
+    amount = request.POST.get('Amount')
+    if Card.objects.filter(card_number=card_number).exists():
+        balance = Card.objects.get(card_number=card_number).balance
+        card_name = Card.objects.get(card_number=card_number).card_name
+        messages.success(request, 'Successful Withdrawal! ' + '$'+str(amount) + ' has been withdrawn from card: ' + card_name)
+        balance = balance - int(amount)
+        Card.update()
+    elif not Card.objects.filter(card_number=card_number).exists():
+        messages.error(request, 'Card Number Not Found!')
+
     context = {'card': card}
     return render(request, 'account-panel.html', context)
 
 @login_required(login_url='login')
 def card_details(request):
-    name = request.GET.get('name')
-    card = Card.objects.filter(card_name=name)
+    card_name = request.GET.get('card_name')
+    card = Card.objects.filter(card_name=card_name)
     context = {'card': card}
     return render(request, 'card-details.html', context)
 

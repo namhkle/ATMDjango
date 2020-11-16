@@ -18,7 +18,9 @@ class Account(models.Model):
 
 class Card(models.Model):
     card_number = models.PositiveIntegerField(primary_key=True) 
-    #account_number = models.ForeignKey(Account, on_delete=models.CASCADE)
+    '''account_number = models.ForeignKey(Account, to_field='account_number',
+                                default=Account.account_number, on_delete=models.CASCADE)'''
+    pin = models.PositiveIntegerField(default=False)                             
     card_name = models.CharField(max_length=30)
     issue_date = models.DateField()
     exp_date = models.DateField(default=datetime.now() + timedelta(days=1095))
@@ -37,7 +39,7 @@ class ATM_Machine(models.Model):
     next_refill = models.DateField()
 
     def __str__(self):
-        return self.atm_uid
+        return str(self.atm_uid)
 
 
 
