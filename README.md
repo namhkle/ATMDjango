@@ -1,6 +1,6 @@
 # ATMDjango
 
-`workon yourEnvName`
+`workon yourEnvName`  
 `python manage.py runserver`
 
 Login with  
