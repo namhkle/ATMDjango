@@ -1,10 +1,11 @@
 <h1 style="text-align: center; margin-top:100px;"">ATM Machine Status</h1>
 <div id="atm-info">
     <p>
-        {% for data in card %}
-            ATM address: {{ data.atm_address }}
+        <!-- Pulls object atm from views.py, data will be then taken from ATM_Machine model-->
+        {% for data in atm %}
+            ATM address: {{ data.address }}
             <br><br>
-            ATM Machine status: {{data.atm_status}}
+            ATM Machine status: {{data.status}}
             <br><br>
             Last refill date: {{ data.atm_last_refill }}
             <br><br>
@@ -17,7 +18,7 @@
     <p>
         </div>
 
-        <button id="account-panel-btn" onclick="location.href = '/account-panel'">&lt&lt&lt Back to Account
+        <button id="account-panel-btn" onclick="location.href = '/admin-account-panel'">&lt&lt&lt Back to Account
             Panel</button>
 
         <script>
@@ -45,7 +46,7 @@
                 cursor: pointer;
                 width: 18%;
                 height: 7%;
-                margin-top: -430px;
+                margin-top: 0px;
                 margin-left: 1000px;
             }
         </style>

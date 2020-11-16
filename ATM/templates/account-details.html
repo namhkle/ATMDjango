@@ -1,27 +1,15 @@
-<h1 style="text-align: center; margin-top:50px;"">Card Details</h1>
+<h1 style="text-align: center; margin-top:50px;"">Account Details</h1>
 <div>
     <p> 
-        {% for data in card %}
+        {% for data in account %}
                 <p style="text-align:center;margin-top:50px;font-size: 22;">
-                    Card name: {{data.card_name}}</p>
+                    Account name: {{data.account_name}}</p>
                 <p id="card-info">
-                    Account name: {{ data.acc_name }}
+                    Account name: {{ data.account_name }}
                     <br><br>
                     Account number: {{ data.account_number }}
                     <br><br>
-                    Pin: {{ data.pin }}
-                    <br><br>
-                    Current Balance: ${{ data.balance }}
-                    <br><br>
-                    Issue date: {{ data.issue_date }}
-                    <br><br>
-                    Expiration date: {{ data.exp_date }}
-                    <br><br>
-                    Address: {{ data.address }}
-                    <br><br>
                     Phone number: {{ data.phone_number }}
-                    <br><br>
-                    Card status: {{ data.card_status }}
                     <br><br>
                 </p>    
         {% endfor %}
@@ -32,7 +20,7 @@
 
 <script>
     function goBack() {
-    window.history.back();
+        window.history.back();
     }
 </script>
 

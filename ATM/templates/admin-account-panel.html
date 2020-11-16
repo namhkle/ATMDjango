@@ -1,13 +1,14 @@
 <h2 style="text-align:center;margin-top:50px;">Welcome {{user.username}}!</h2>
-<h1 style="text-align:center;">Account Panel</h1>
+<h1 style="text-align:center;">Admin Account Panel</h1>
 
 {% if user.is_authenticated %}
-<button id="logout-btn" value="Logout" onclick="location.href = '/login'">
+<button id="logout-btn" value="Logout" onclick="location.href = '/admin-login'">
     Logout</button>
-<!-- <a href = "{% url 'login' %}">Logout</a> -->
+
 {% endif %}
 
-<marquee scrollamount="18.5" behavior="slide" direction="up">
+<!-- Looks up messages, if there is one, prints one -->
+<marquee scrollamount="18.5" behavior="slide" direction="down">
     {% for message in messages %}
     {% if message.tags == "error" %}
     <p id="messageError">{{message}}</p>
@@ -18,10 +19,8 @@
 </marquee>
 
 <button style="margin-left:1080px;margin-top:0px;" onclick="location.href = '/atm-status'">View ATM Status</button>
-<button style="margin-left:1080px;margin-top:0px;" onclick="location.href = '/add-card'">Add Card</button>
 
-
-<h1 style="margin-left:200px;margin-top:-50px;">Created Card(s):</h1>
+<h1 style="margin-left:230px;margin-top:50px;">Created Card(s):</h1>
 <p4 style="margin-left:695px;margin-top:-50px;">Click to view details</p4>
 <div style="text-align: center;">
     <h1>
@@ -34,68 +33,20 @@
     </h1>
 </div>
 
-<button class="transaction-btn" "type=" submit" onclick="withdrawlformOpen()">Cash Withdrawal</button>
-<button class="transaction-btn" style="margin-top:-22px;" "type=" submit"
-    onclick="transferFormOpen()">Transfer</button>
-
-<form id="withdrawlForm" style="display:none;" action="" method="post">
-    {% csrf_token %}
-    <div style="margin-left:620px">
-        <input type="text" name="Card Number" placeholder="Card Number..." class="form-control">
-    </div>
-
-    <div style="margin-left:620px">
-        <input type="number" name="Pin" placeholder="Pin..." class="form-control">
-    </div>
-
-    <div style="margin-left:620px">
-        <input type="number" name="Amount" placeholder="Amount..." class="form-control">
-    </div>
-
-    <button class="cancel-button" onclick="formOpen()">Cancel</button>
-    <button type="submit">Confirm</button>
-    
-</form>
-
-
-
-<form id="transferForm" style="display:none;" action="" method="post">
-    {% csrf_token %}
-    <div style="margin-left:620px">
-        <input type="text" name="Your Card Number" placeholder=" Your Card Number..." class="form-control">
-    </div>
-
-    <div style="margin-left:620px">
-        <input type="number" name="Pin" placeholder="Pin..." class="form-control">
-    </div>
-
-    <div style="margin-left:620px">
-        <input type="number" name="Receiver Account number" placeholder="Receiver's Account number..."
-            class="form-control">
-    </div>
-
-    <button class="cancel-button" onclick="formOpen()">Cancel</button>
-    <button onclick="location.href='card-details/?name={{data.card_name}}'">Confirm</button>
-</form>
+<h1 style="margin-left:230px;margin-top:50px;">Created Account(s):</h1>
+<p4 style="margin-left:695px;margin-top:-50px;">Click to view details</p4>
+<div style="text-align: center;">
+    <h1>
+        {% for data in account %}
+        {% if data.account_name %}
+        <button method="post" name="{{data.account_name}}" class="card-btn"
+            onclick="location.href='account-details/?account_name={{data.account_name}}'">{{data.account_name}}</button>
+        {% endif %}
+        {% endfor %}
+    </h1>
+</div>
 
 <script>
-    function withdrawlformOpen() {
-        var form = document.getElementById('withdrawlForm');
-        if (form.style.display == "none")
-            form.style.display = '';
-        else {
-            form.style.display = "none";
-        }
-    }
-
-    function transferFormOpen() {
-        var form = document.getElementById('transferForm');
-        if (form.style.display == "none")
-            form.style.display = '';
-        else {
-            form.style.display = "none";
-        }
-    }
 
     function reply_click(clicked_class) {
         var x = clicked_class.getAttribute("name");
@@ -114,20 +65,20 @@
         padding: 50px;
         width: 200px;
         height: 24px;
-        margin-top: -35px;
-        margin-left: 650px;
+        margin-top: 0px;
+        margin-left: 615px;
     }
 
     #messageError {
         text-align: center;
         font-size: 18;
-        background-color: rgb(241, 210, 123);
+        background-color: rgb(233, 201, 114);
         color: #fff;
         padding: 29px;
-        width: 500px;
+        width: 250px;
         height: -3px;
-        margin-top: 20px;
-        margin-left: 520px;
+        margin-top: 0px;
+        margin-left: 615px;
     }
 
     button {
@@ -196,4 +147,6 @@
         width: 10%;
         margin-left: 600px;
     }
+
+
 </style>

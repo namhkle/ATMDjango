@@ -9,24 +9,109 @@ from django.contrib import messages
 from .forms import*
 from .models import*
 
-# Create your views here.
-def index(request):
-    form = CreateAccountForm()
-    text = ""
+def user_login(request):
+    form = UserLogin()
     if request.method == 'POST':
-        form = CreateAccountForm(request.POST)
-        if form.is_valid():
-            form.save()
-            user = form.cleaned_data.get('username')
-            messages.success(request, 'Account was created for ' + user)
-            return redirect('/login')
+        account_name = request.POST.get('Account Name')
+        password = request.POST.get('Password')
+        if Account.objects.filter(account_name=account_name).exists() and Account.objects.filter(password=password).exists():
+            messages.success(request,'Login Success!')
+            return redirect('/user-account-panel')
         else:
-            messages.error(request, 'Passwords must contain at least 8 characters and must match')
-    context = {'form':form, 'text':text}
-    return render(request, 'index.html', context)
-    
+            messages.error(request,'Account name OR Password is incorrect!')
+    context = {'form':form,}
+    return render(request, 'user-login.html', context)
 
-def log_in(request):
+def user_log_out(request):
+	logout(request)
+	return redirect('/user-login')
+
+@login_required(login_url='/admin-login')
+def user_account_panel(request):
+    card = Card.objects.all()
+    account = Account.objects.all()
+    
+    context = {'card': card, 'account':account}
+    return render(request, 'user-account-panel.html', context)
+
+def withdrawal(request):
+    if request.method == 'POST':
+        user_pin = request.POST.get('Pin')
+        user_card_number = request.POST.get('Your Card Number')      # gets user input for card number
+        amount = request.POST.get('Amount')                          # gets user input for amount
+    
+        # Cash withdrawal: Validatation - checks if card number and pin exist and verify user's balance 
+        if Card.objects.filter(card_number=user_card_number).exists(): 
+
+            # gets user pin,balance, card name based on user's card number input
+            #pin_number = Card.objects.filter(card_number=user_card_number).pin  # error if use this
+            user_balance = Card.objects.get(card_number=user_card_number).balance  
+            user_card_name = Card.objects.get(card_number=user_card_number).card_name 
+
+            if int(amount) <= user_balance:
+                # performs withdrawal
+                user_balance -= int(amount)                
+                
+                # updates database in user's card
+                Card.objects.get(card_number=user_card_number).save()
+
+                messages.success(request, 'Withdrawal Success! ' + '$'+ amount + ' has been withdrawn from card: ' + user_card_name)   
+            else:
+                messages.error(request, 'Insufficient Balance')
+        else:
+            messages.error(request, 'Card Number or Pin is incorrect')
+
+    return render(request, 'withdrawal.html')
+
+def transfer(request):
+    if request.method == 'POST':   
+        user_pin = request.POST.get('Pin')
+        user_card_number = request.POST.get('Your Card Number')      # gets user input for card number
+        amount = request.POST.get('Amount')                          # gets user input for amount
+
+        # Transfer Validation - checks if user's and receiver's card number exist and verify user pin & balance 
+        if Card.objects.filter(card_number=user_card_number).exists():
+
+            # gets user balance based on user's card number input
+            user_balance = Card.objects.get(card_number=user_card_number).balance
+            # gets user card name based on user's card number input
+            user_card_name = Card.objects.get(card_number=user_card_number).card_name 
+            # get receiver's account based on user input
+            receiver_card_number = request.POST.get('Receiver Card number') 
+            # get user pin based on user's card number input
+            pin_number = Card.objects.get(card_number=user_card_number).pin
+
+            if user_pin != pin_number:
+
+                if Card.objects.filter(card_number=receiver_card_number).exists(): 
+
+                    # gets receiver's balance based on receiver's card number
+                    receiver_card_balance = Card.objects.get(card_number=receiver_card_number).balance
+                    # get receiver's card name
+                    receiver_card_name = Card.objects.get(card_number=receiver_card_number).card_name
+                    
+                    if int(amount) <= user_balance:
+                        # performs transfer 
+                        user_balance -= int(amount)
+                        receiver_card_balance += int(amount)
+
+                        # perform database updates for user and receiver cards
+                        Card.objects.get(card_number=receiver_card_number).save()
+                        Card.objects.get(card_number=user_card_number).save()
+
+                        messages.success(request, 'Transfer Success! ' + '$'+ amount + ' has been transferred from card: ' + user_card_name + ' to card: ' + receiver_card_name)       
+                    else:
+                        messages.error(request, 'Insufficient Balance')
+                else:
+                    messages.error(request, 'Receiver\'s Card Number is incorrect') 
+            else:
+                    messages.error(request, 'Your Pin is incorrect')    
+        else:
+            messages.error(request, 'Your Card Number or Pin is incorrect')
+
+    return render(request, 'transfer.html')
+
+def admin_log_in(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -35,33 +120,23 @@ def log_in(request):
         if account is not None:
             login(request, account)
             messages.success(request, 'Login Success!')
-            return redirect('/account-panel')
+            return redirect('/admin-account-panel')
         else:
             messages.error(request, 'Username OR Password is incorrect')
 
-    return render(request,'login.html')
+    return render(request,'admin-login.html')
 
-def log_out(request):
+def admin_log_out(request):
 	logout(request)
-	return redirect('/login')
+	return redirect('/admin-login')
 
-@login_required(login_url='/login')
-def account_panel(request):
+@login_required(login_url='/admin-login')
+def admin_account_panel(request):
     card = Card.objects.all()
-    pin = request.POST.get('Pin')
-    card_number = request.POST.get('Card Number')
-    amount = request.POST.get('Amount')
-    if Card.objects.filter(card_number=card_number).exists():
-        balance = Card.objects.get(card_number=card_number).balance
-        card_name = Card.objects.get(card_number=card_number).card_name
-        messages.success(request, 'Successful Withdrawal! ' + '$'+str(amount) + ' has been withdrawn from card: ' + card_name)
-        balance = balance - int(amount)
-        Card.update()
-    elif not Card.objects.filter(card_number=card_number).exists():
-        messages.error(request, 'Card Number Not Found!')
+    account = Account.objects.all()
 
-    context = {'card': card}
-    return render(request, 'account-panel.html', context)
+    context = {'card': card, 'account':account}
+    return render(request, 'admin-account-panel.html', context)
 
 @login_required(login_url='login')
 def card_details(request):
@@ -70,24 +145,16 @@ def card_details(request):
     context = {'card': card}
     return render(request, 'card-details.html', context)
 
-@login_required(login_url='login')
-def add_card(request):
-    messageError = ""
-    form = CardSignupForm()
-    if request.method == 'POST':
-        form = CardSignupForm(request.POST)
-        if form.is_valid():
-            card = form.cleaned_data.get('card_name')
-            messages.success(request, 'New card ' + card + ' has been added to your account') 
-            form.save()
-        else:
-            messages.error(request, 'Card already exists')
-    context = {'form':form}
-    return render(request, 'add-card.html', context)
+def account_details(request):
+    account_name = request.GET.get('account_name')
+    account = Account.objects.filter(account_name=account_name)
+    context = {'account': account}
+    return render(request, 'account-details.html', context)
 
 @login_required(login_url='login')
 def atm_status(request):
-    context = {}
+    atm = ATM_Machine.objects.all();
+    context = {'atm':atm}
     return render(request, 'atm-status.html', context)
 
 

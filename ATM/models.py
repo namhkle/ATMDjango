@@ -11,6 +11,7 @@ import random
 class Account(models.Model):
     account_number = models.PositiveIntegerField(primary_key=True) 
     account_name = models.CharField(max_length=30)
+    password = models.CharField(max_length=30)
     phone_number = models.PositiveIntegerField()   
 
     def __str__(self):
@@ -18,8 +19,7 @@ class Account(models.Model):
 
 class Card(models.Model):
     card_number = models.PositiveIntegerField(primary_key=True) 
-    '''account_number = models.ForeignKey(Account, to_field='account_number',
-                                default=Account.account_number, on_delete=models.CASCADE)'''
+    #account_number = models.ForeignKey(Account, to_field='account_number',on_delete=models.CASCADE)
     pin = models.PositiveIntegerField(default=False)                             
     card_name = models.CharField(max_length=30)
     issue_date = models.DateField()
@@ -33,6 +33,8 @@ class Card(models.Model):
  
 class ATM_Machine(models.Model):
     atm_uid = models.PositiveIntegerField(primary_key=True)
+    address = models.CharField(max_length=30,default='Group 1')
+    status =  models.CharField(max_length=30,default='Active')
     balance = models.PositiveIntegerField()
     min_enquiry = models.PositiveIntegerField()
     last_refill = models.DateField()

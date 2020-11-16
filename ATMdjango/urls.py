@@ -22,14 +22,24 @@ from ATM import views
 
 urlpatterns = [
     path('admin/', admin.site.urls), 
-    path('', views.index),
     #path('ATM/', index) for different pages
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'), 
-    path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'), 
-    path('account-panel/', views.account_panel), 
-    path('add-card/', views.add_card), 
+    path('', views.user_login),     # homepage
+    path('user-account-panel/', views.user_account_panel), 
+    path('admin-account-panel/', views.admin_account_panel), 
+    path('admin-login/', views.admin_log_in), 
+    path('admin-logout/', views.admin_log_out), 
+   
+    # only admin can view machines status, all accounts and cards details. 
     path('atm-status/', views.atm_status), 
-    path('account-panel/card-details/', views.card_details), 
+    path('admin-account-panel/card-details/', views.card_details),    
+    path('admin-account-panel/account-details/', views.account_details), 
+
+    # only user can have withdrawal and transfer features and can only can view his own cards.
+    path('user-account-panel/card-details/', views.card_details),
+    path('user-account-panel/withdrawal/', views.withdrawal),
+    path('user-account-panel/transfer/', views.transfer),
+
     path('accounts/', include('django.contrib.auth.urls')),
+
 
 ]

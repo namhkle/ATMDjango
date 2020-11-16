@@ -7,17 +7,13 @@ from django import forms
 
 from .models import*
 
-class CreateAccountForm(UserCreationForm):
+class UserLogin(forms.ModelForm):
     class Meta:
-        model = User
-        fields=('username','password1', 'password2',)
+        model = Account
+        fields=('account_name', 'password',)
 
 
-class CardSignupForm(ModelForm):
-    class Meta:
-        model = Card
-        fields = ('balance', 'issue_date',
-        'exp_date','address', 'phone_number',)
+
         
      
  

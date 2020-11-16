@@ -1,23 +1,25 @@
 <div id="title">
     <h1>
-        Hello Group 1!
-        <br>ATM Machine <span style="font-size:24"> (better name needed)</span> <!-- put a better name here -->
+        <br>Group 1 ATM Machine <span style="font-size:24"></span> <!-- put a better name here -->
     </h1>
 </div>
 	
 <form action="" method="post">
     {% csrf_token %}
-    <div class="container">
-        <div style=" margin-left:552px;">
-            {% for field in form %}
-            <ul>{{field}}</ul>
-            {% endfor %}
-        </div>
-    <button type="submit"name="Create User">Register Account</button>
-    <p style="margin-left: 598px;">Already have an account? Log in <a href='login/'>here</a></p>
+    <div style="margin-left:620px">
+        <input type="text" name="Account Name" placeholder=" Account Name..." class="form-control">
+    </div>
+
+    <div style="margin-left:620px">
+        <input type="text" name="Password" placeholder="Password..." class="form-control">
+    </div>
+
+    <button style="margin-left: 600px"submit"name="User Login">Login</button>
+    <p style="margin-left: 684px;">Admin Log in <a href='admin-login/'>Here</a></p>
     </div>
 </form>
 
+<!-- Looks up messages, if there is one, prints one -->
 <marquee scrollamount="18.5" behavior="slide" direction="down">
     {% for message in messages %}
         {% if message.tags == "error" %}
@@ -94,12 +96,12 @@
     #messageError{
         text-align:center;
         font-size: 18;
-		background-color: rgb(231, 193, 88);
+		background-color: rgb(233, 201, 114);
 		color: #fff;
         padding: 29px;
 		width: 500px;
         height: -3px;
 		margin-top: 0px;
-        margin-left: 520px;
+        margin-left: 490px;
 	}       
 </style>
