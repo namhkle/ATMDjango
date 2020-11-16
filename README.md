@@ -1,7 +1,7 @@
 # ATMDjango
 
-workon yourEnvName
-python manage.py runserver
+`workon yourEnvName`
+`python manage.py runserver`
 
 Login with  
 username: admin   
