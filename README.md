@@ -1,8 +1,8 @@
 # ATMDjango
 
-Login with
-username: admin 
-pw: group1
+Login with  
+username: admin   
+pw: group1  
 http://127.0.0.1:8000/admin/ 
 
 
