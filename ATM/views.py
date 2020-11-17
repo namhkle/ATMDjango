@@ -45,15 +45,14 @@ def deposit(request):
         if Card.objects.filter(card_number=user_card_number).exists(): 
 
             # gets user pin,balance, card name based on user's card number input
-            #pin_number = Card.objects.filter(card_number=user_card_number).pin  # error if use this
-            user_balance = Card.objects.get(card_number=user_card_number).balance  
             user_card_name = Card.objects.get(card_number=user_card_number).card_name 
+            userCardObject = Card.objects.get(card_number=user_card_number) #*important*
+
 
             # performs deposit
-            user_balance += int(amount)                
-            
-            # updates database in user's card
-            Card.objects.get(card_number=user_card_number).save()
+            userCardObject.balance += int(amount)
+            userCardObject.save()#*this is how it actually saves*            
+
 
             messages.success(request, 'Deposit Success! ' + '$'+ amount + ' has been depositted from card: ' + user_card_name)   
 
@@ -73,16 +72,15 @@ def withdrawal(request):
         if Card.objects.filter(card_number=user_card_number).exists(): 
 
             # gets user pin,balance, card name based on user's card number input
-            #pin_number = Card.objects.filter(card_number=user_card_number).pin  # error if use this
             user_balance = Card.objects.get(card_number=user_card_number).balance  
             user_card_name = Card.objects.get(card_number=user_card_number).card_name 
+            userCardObject = Card.objects.get(card_number=user_card_number) #*important*
+
 
             if int(amount) <= user_balance:
                 # performs withdrawal
-                user_balance -= int(amount)                
-                
-                # updates database in user's card
-                Card.objects.get(card_number=user_card_number).save()
+                userCardObject.balance -= int(amount)
+                userCardObject.save()#*this is how it actually saves*    
 
                 messages.success(request, 'Withdrawal Success! ' + '$'+ amount + ' has been withdrawn from card: ' + user_card_name)   
             else:
