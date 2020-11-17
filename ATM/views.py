@@ -91,35 +91,25 @@ def transfer(request):
 
         # Transfer Validation - checks if user's and receiver's card number exist and verify user pin & balance 
         if Card.objects.filter(card_number=user_card_number).exists():
+            userCardObject = Card.objects.get(card_number=user_card_number) #*important*
 
-            # gets user balance based on user's card number input
-            user_balance = Card.objects.get(card_number=user_card_number).balance
-            # gets user card name based on user's card number input
-            user_card_name = Card.objects.get(card_number=user_card_number).card_name 
             # get receiver's account based on user input
             receiver_card_number = request.POST.get('Receiver Card number') 
-            # get user pin based on user's card number input
-            pin_number = Card.objects.get(card_number=user_card_number).pin
 
-            if user_pin != pin_number:
-
+            if user_pin != userCardObject.pin:
                 if Card.objects.filter(card_number=receiver_card_number).exists(): 
 
-                    # gets receiver's balance based on receiver's card number
-                    receiver_card_balance = Card.objects.get(card_number=receiver_card_number).balance
-                    # get receiver's card name
-                    receiver_card_name = Card.objects.get(card_number=receiver_card_number).card_name
+                    receiverCardObject = Card.objects.get(card_number=receiver_card_number) #*important*
                     
-                    if int(amount) <= user_balance:
+                    if int(amount) <= userCardObject.balance:
                         # performs transfer 
-                        user_balance -= int(amount)
-                        receiver_card_balance += int(amount)
+                        userCardObject.balance      -= int(amount)
+                        receiverCardObject.balance  += int(amount)
 
-                        # perform database updates for user and receiver cards
-                        Card.objects.get(card_number=receiver_card_number).save()
-                        Card.objects.get(card_number=user_card_number).save()
+                        userCardObject.save()       #*this is how it actually saves*
+                        receiverCardObject.save()   #*this is how it actually saves*    
 
-                        messages.success(request, 'Transfer Success! ' + '$'+ amount + ' has been transferred from card: ' + user_card_name + ' to card: ' + receiver_card_name)       
+                        messages.success(request, 'Transfer Success! ' + '$'+ amount + ' has been transferred from card: ' + userCardObject.card_name + ' to card: ' + receiverCardObject.card_name)       
                     else:
                         messages.error(request, 'Insufficient Balance')
                 else:
