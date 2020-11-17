@@ -44,21 +44,17 @@ def deposit(request):
         # Cash deposit: Validatation - checks if card number and pin exist and verify user's balance 
         if Card.objects.filter(card_number=user_card_number).exists(): 
 
-            # gets user pin,balance, card name based on user's card number input
-            user_card_name = Card.objects.get(card_number=user_card_number).card_name 
+            #need to actually create the object to update its values
             userCardObject = Card.objects.get(card_number=user_card_number) #*important*
-
 
             # performs deposit
             userCardObject.balance += int(amount)
             userCardObject.save()#*this is how it actually saves*            
 
-
-            messages.success(request, 'Deposit Success! ' + '$'+ amount + ' has been depositted from card: ' + user_card_name)   
+            messages.success(request, 'Deposit Success! ' + '$'+ amount + ' has been depositted from card: ' + userCardObject.card_name)   
 
         else:
             messages.error(request, 'Card Number or Pin is incorrect')
-
     return render(request, 'deposit.html')
 
 
@@ -71,18 +67,15 @@ def withdrawal(request):
         # Cash withdrawal: Validatation - checks if card number and pin exist and verify user's balance 
         if Card.objects.filter(card_number=user_card_number).exists(): 
 
-            # gets user pin,balance, card name based on user's card number input
-            user_balance = Card.objects.get(card_number=user_card_number).balance  
-            user_card_name = Card.objects.get(card_number=user_card_number).card_name 
+            #need to actually create the object to update its values
             userCardObject = Card.objects.get(card_number=user_card_number) #*important*
 
-
-            if int(amount) <= user_balance:
+            if int(amount) <= userCardObject.balance:
                 # performs withdrawal
                 userCardObject.balance -= int(amount)
                 userCardObject.save()#*this is how it actually saves*    
 
-                messages.success(request, 'Withdrawal Success! ' + '$'+ amount + ' has been withdrawn from card: ' + user_card_name)   
+                messages.success(request, 'Withdrawal Success! ' + '$'+ amount + ' has been withdrawn from card: ' + userCardObject.card_name)   
             else:
                 messages.error(request, 'Insufficient Balance')
         else:
