@@ -34,6 +34,35 @@ def user_account_panel(request):
     context = {'card': card, 'account':account}
     return render(request, 'user-account-panel.html', context)
 
+
+def deposit(request):
+    if request.method == 'POST':
+        user_pin = request.POST.get('Pin')
+        user_card_number = request.POST.get('Your Card Number')      # gets user input for card number
+        amount = request.POST.get('Amount')                          # gets user input for amount
+    
+        # Cash deposit: Validatation - checks if card number and pin exist and verify user's balance 
+        if Card.objects.filter(card_number=user_card_number).exists(): 
+
+            # gets user pin,balance, card name based on user's card number input
+            #pin_number = Card.objects.filter(card_number=user_card_number).pin  # error if use this
+            user_balance = Card.objects.get(card_number=user_card_number).balance  
+            user_card_name = Card.objects.get(card_number=user_card_number).card_name 
+
+            # performs deposit
+            user_balance += int(amount)                
+            
+            # updates database in user's card
+            Card.objects.get(card_number=user_card_number).save()
+
+            messages.success(request, 'Deposit Success! ' + '$'+ amount + ' has been depositted from card: ' + user_card_name)   
+
+        else:
+            messages.error(request, 'Card Number or Pin is incorrect')
+
+    return render(request, 'deposit.html')
+
+
 def withdrawal(request):
     if request.method == 'POST':
         user_pin = request.POST.get('Pin')

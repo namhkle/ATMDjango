@@ -36,6 +36,7 @@ urlpatterns = [
 
     # only user can have withdrawal and transfer features and can only can view his own cards.
     path('user-account-panel/card-details/', views.card_details),
+    path('user-account-panel/deposit/', views.deposit),
     path('user-account-panel/withdrawal/', views.withdrawal),
     path('user-account-panel/transfer/', views.transfer),
 

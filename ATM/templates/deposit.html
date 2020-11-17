@@ -1,53 +1,39 @@
-<h2 style="text-align:center;margin-top:50px;">Welcome {{Account.account_name}}!</h2>
-<h1 style="text-align:center;">User Account Panel</h1>
+<h1 style="text-align:center;margin-top:50px;">Deposit</h1>
+<form id="depositForm" action="" method="post">
+    {% csrf_token %}
+    <div style="margin-left:620px">
+        <input type="text" name="Your Card Number" placeholder="Your Card Number..." class="form-control">
+    </div>
 
-{% if user.is_authenticated %}
-<button id="logout-btn" value="Logout" onclick="location.href = '/'">
-    Logout</button>
+    <div style="margin-left:620px">
+        <input type="number" name="Pin" placeholder="Pin..." class="form-control">
+    </div>
 
-{% endif %}
+    <div style="margin-left:620px">
+        <input type="number" name="Amount" placeholder="Amount..." class="form-control">
+    </div>
+
+    <button style="margin-left: 760px;" type="submit">Confirm</button>
+</form>
+
+<button class="cancel-button" style="margin-top: -73px;" onclick="window.location.href='/user-account-panel'">Cancel</button>
+
+
+<button class="account-panel-btn2" onclick="window.location.href='/user-account-panel'">&lt&lt&lt Back to Account Panel</button>
 
 <!-- Looks up messages, if there is one, prints one -->
 <marquee scrollamount="18.5" behavior="slide" direction="down">
     {% for message in messages %}
     {% if message.tags == "error" %}
-    <p id="messageError">{{message}}</p>
+    <p id="messageError2">{{message}}</p>
     {% else %}
-    <p id="messages">{{message}}</p>
+    <p id="messages2">{{message}}</p>
     {% endif %}
     {% endfor %}
 </marquee>
 
-<h1 style="margin-left:230px;margin-top:50px;">Your Card(s):</h1>
-<p4 style="margin-left:695px;margin-top:-50px;">Click to view details</p4>
-<div style="text-align: center;">
-    <h1>
-        {% for data in card %}
-        {% if data.card_name %}
-        <button method="post" name="{{data.card_name}}" class="card-btn"
-            onclick="location.href='card-details/?card_name={{data.card_name}}'">{{data.card_name}}</button>
-        {% endif %}
-        {% endfor %}
-    </h1>
-</div>
-
-<button class="transaction-btn" onclick="location.href = 'deposit'">Deposit</button>
-<button class="transaction-btn" style="margin-top:-22px;" onclick="location.href = 'withdrawal'">Cash Withdrawal</button>
-<button class="transaction-btn" style="margin-top:22px;" onclick="location.href = 'transfer'">Transfer</button>
-
-
-<script>
-
-    function reply_click(clicked_class) {
-        var x = clicked_class.getAttribute("name");
-
-        document.getElementsByClassName("card-details")[0].innerHTML = x;
-    }
-
-</script>
-
 <style>
-    #messages {
+    #messages2 {
         text-align: center;
         font-size: 18;
         background-color: rgb(78, 216, 147);
@@ -55,11 +41,11 @@
         padding: 50px;
         width: 200px;
         height: 24px;
-        margin-top: -77px;
-        margin-left: 615px;
+        margin-top: -25px;
+        margin-left: 605px;
     }
 
-    #messageError {
+    #messageError2 {
         text-align: center;
         font-size: 18;
         background-color: rgb(233, 201, 114);
@@ -67,7 +53,7 @@
         padding: 29px;
         width: 250px;
         height: -10px;
-        margin-top: -15px;
+        margin-top: 0px;
         margin-left: 615px;
     }
 
@@ -97,7 +83,7 @@
         padding: 14px 20px;
         margin: 8px 0;
         cursor: pointer;
-        width: 11%;
+        width: 8%;
     }
 
     .card-btn:hover {
@@ -136,6 +122,20 @@
         cursor: pointer;
         width: 10%;
         margin-left: 600px;
+    }
+
+    .account-panel-btn2{
+        background-color: #5ea8ee;
+        font-size:16;
+        color: rgb(250, 250, 250);
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 18%;
+        height:7%;
+        margin-top: 0px;
+        margin-left:1000px;
     }
 
 </style>
