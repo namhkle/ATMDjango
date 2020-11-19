@@ -1,6 +1,7 @@
 from django.db import models
 from django import forms
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
 from sys import *
 import hashlib
 import random
@@ -28,7 +29,8 @@ class Card(models.Model):
     balance = models.PositiveIntegerField() 
     address = models.CharField(max_length=60)  
     phone_number = models.PositiveIntegerField()
-    #card_status = models.CharField(max_length=30, default='Active')
+    status = models.CharField(max_length=30, default='Active')
+    transaction_history = models.TextField(blank=True)
 
     def __str__(self):
         return self.card_name

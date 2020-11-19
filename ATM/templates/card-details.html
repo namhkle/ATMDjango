@@ -5,6 +5,8 @@
                 <p style="text-align:center;margin-top:50px;font-size: 22;">
                     Card name: {{data.card_name}}</p>
                 <p id="card-info">
+                    Card number: {{ data.card_number }}
+                    <br><br>
                     Pin: {{ data.pin }}
                     <br><br>
                     Current Balance: ${{ data.balance }}
@@ -17,7 +19,7 @@
                     <br><br>
                     Phone number: {{ data.phone_number }}
                     <br><br>
-                    Card status: {{ data.card_status }}
+                    Card status: {{ data.status }}
                     <br><br>
                 </p>    
         {% endfor %}

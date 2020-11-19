@@ -4,7 +4,6 @@
 {% if user.is_authenticated %}
 <button id="logout-btn" value="Logout" onclick="location.href = '/'">
     Logout</button>
-
 {% endif %}
 
 <!-- Looks up messages, if there is one, prints one -->
@@ -34,6 +33,13 @@
 <button class="transaction-btn" onclick="location.href = 'deposit'">Deposit</button>
 <button class="transaction-btn" style="margin-top:-22px;" onclick="location.href = 'withdrawal'">Cash Withdrawal</button>
 <button class="transaction-btn" style="margin-top:22px;" onclick="location.href = 'transfer'">Transfer</button>
+<button class="transaction-btn"style="margin-top:22px" onclick="location.href = 'block-card'">Block a Card</button>
+<button class="transaction-btn"style="margin-top:22px" onclick="location.href = 'activate-card'">Activate a Card</button>
+
+<button class="transaction-btn"style="margin-top:22px" onclick="location.href = 'reset-pin'">Reset Pin</button>
+<button class="transaction-btn"style="margin-top:22px" onclick="location.href = 'update-phone'">Update Phone Number</button>
+<button class="transaction-btn"style="margin-top:22px" onclick="location.href = 'view-history'">View Transaction History</button>
+<button class="transaction-btn"style="margin-top:22px" onclick="location.href = 'update-expd'">Update Expiration Date</button>
 
 
 <script>

@@ -29,16 +29,22 @@ urlpatterns = [
     path('admin-login/', views.admin_log_in), 
     path('admin-logout/', views.admin_log_out), 
    
-    # only admin can view machines status, all accounts and cards details. 
+    # only admin can view machines status, all accounts and all cards details. 
     path('atm-status/', views.atm_status), 
     path('admin-account-panel/card-details/', views.card_details),    
     path('admin-account-panel/account-details/', views.account_details), 
 
-    # only user can have withdrawal and transfer features and can only can view his own cards.
+    # only user can have deposit, withdrawal, transfer and other features
     path('user-account-panel/card-details/', views.card_details),
     path('user-account-panel/deposit/', views.deposit),
     path('user-account-panel/withdrawal/', views.withdrawal),
     path('user-account-panel/transfer/', views.transfer),
+    path('user-account-panel/block-card/', views.block_card),
+    path('user-account-panel/activate-card/', views.activate_card),
+    path('user-account-panel/reset-pin/', views.reset_pin),
+    path('user-account-panel/update-phone/', views.update_phone),
+    path('user-account-panel/update-expd/', views.update_expd),
+    path('user-account-panel/view-history/', views.view_history),
 
     path('accounts/', include('django.contrib.auth.urls')),
 
