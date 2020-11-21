@@ -49,20 +49,23 @@ def deposit(request):
             userCardObject = Card.objects.get(card_number=user_card_number) #*important*
             if int(user_pin) == userCardObject.pin:
                 if userCardObject.status == 'Active':
-                    # performs deposit
-                    userCardObject.balance += int(amount)
-                    # updates transaction history
-                    ts = datetime.now()
-                    userCardObject.transaction_history += 'Deposit: + $' + amount + '          ' + str(ts) + '\n'
-                    userCardObject.save()#*this is how it actually saves*     
+                    if (int(amount) >= 10):
+                        # performs deposit
+                        userCardObject.balance += int(amount)
+                        # updates transaction history
+                        ts = datetime.now()
+                        userCardObject.transaction_history += 'Deposit: + $' + amount + '          ' + str(ts) + '\n'
+                        userCardObject.save()#*this is how it actually saves*     
 
-                    # updates ATM machine balance
-                    atmMachineObject = ATM_Machine.objects.get()
-                    atmMachineObject.balance += int(amount)
+                        # updates ATM machine balance
+                        atmMachineObject = ATM_Machine.objects.get()
+                        atmMachineObject.balance += int(amount)
 
-                    atmMachineObject.save()       
+                        atmMachineObject.save()       
 
-                    messages.success(request, 'Deposit Success! ' + '$'+ amount + ' has been depositted from card: ' + userCardObject.card_name)   
+                        messages.success(request, 'Deposit Success! ' + '$'+ amount + ' has been depositted from card: ' + userCardObject.card_name)   
+                    else:
+                        messages.error(request, 'Minimum deposit is $10')   
                 else:
                     messages.error(request, 'Your card is currently inactive')
             else:
@@ -87,19 +90,22 @@ def withdrawal(request):
             if int(user_pin) == userCardObject.pin:
                 if userCardObject.status == 'Active':
                     if int(amount) <= userCardObject.balance:
-                        # performs withdrawal
-                        userCardObject.balance -= int(amount)
-                        # updates transaction history
-                        ts = datetime.now()
-                        userCardObject.transaction_history += 'Withdrawal: - $' + amount + '          ' + str(ts) + '\n'
-                        userCardObject.save()#*this is how it actually saves* 
+                        if (int(amount) >= 10):
+                            # performs withdrawal
+                            userCardObject.balance -= int(amount)
+                            # updates transaction history
+                            ts = datetime.now()
+                            userCardObject.transaction_history += 'Withdrawal: - $' + amount + '          ' + str(ts) + '\n'
+                            userCardObject.save()#*this is how it actually saves* 
 
-                        # updates ATM machine balance
-                        atmMachineObject = ATM_Machine.objects.get()
-                        atmMachineObject.balance -= int(amount)
-                        atmMachineObject.save()    
+                            # updates ATM machine balance
+                            atmMachineObject = ATM_Machine.objects.get()
+                            atmMachineObject.balance -= int(amount)
+                            atmMachineObject.save()    
 
-                        messages.success(request, 'Withdrawal Success! ' + '$'+ amount + ' has been withdrawn from card: ' + userCardObject.card_name)   
+                            messages.success(request, 'Withdrawal Success! ' + '$'+ amount + ' has been withdrawn from card: ' + userCardObject.card_name)   
+                        else:
+                            messages.error(request, 'Minimum withdrawal is $10')   
                     else:
                         messages.error(request, 'Insufficient Balance')
                 else:
@@ -131,17 +137,19 @@ def transfer(request):
                     
                     if userCardObject.status and receiverCardObject.status == 'Active':
                         if int(amount) <= userCardObject.balance:
-                            # performs transfer 
-                            userCardObject.balance      -= int(amount)
-                            receiverCardObject.balance  += int(amount)
+                            if (int(amount) >= 10):
+                                # performs transfer 
+                                userCardObject.balance      -= int(amount)
+                                receiverCardObject.balance  += int(amount)
 
-                            # updates transaction history
-                            ts = datetime.now()
-                            userCardObject.transaction_history += 'Transfer: - $' + amount + '          ' + str(ts) + '\n'
-                            userCardObject.save()       #*this is how it actually saves*
-                            receiverCardObject.save()   #*this is how it actually saves*    
-
-                            messages.success(request, 'Transfer Success! ' + '$'+ amount + ' has been transferred from card: ' + userCardObject.card_name + ' to card: ' + receiverCardObject.card_name)       
+                                # updates transaction history
+                                ts = datetime.now()
+                                userCardObject.transaction_history += 'Transfer: - $' + amount + '          ' + str(ts) + '\n'
+                                userCardObject.save()       #*this is how it actually saves*
+                                receiverCardObject.save()   #*this is how it actually saves*    
+                                messages.success(request, 'Transfer Success! ' + '$'+ amount + ' has been transferred from card: ' + userCardObject.card_name + ' to card: ' + receiverCardObject.card_name)       
+                            else:
+                                messages.error(request, 'Minimum withdrawal is $10')   
                         else:
                             messages.error(request, 'Insufficient Balance')
                     else:
